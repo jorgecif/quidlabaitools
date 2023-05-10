@@ -8,6 +8,7 @@ from streamlit_extras.let_it_rain import rain
 import prompts
 
 
+
 # Variables para guardar datos de sesión
 
 if 'puntaje_mas_alto' not in st.session_state:
@@ -75,7 +76,7 @@ st.sidebar.image(image, width=None, use_column_width=None)
 with st.sidebar:
     selected = option_menu(
         menu_title="Selecciona",  # required
-        options=["Home", "Imagen", "Texto", "Audio", "Listado", "Contacto"],  # required
+        options=["Home", "Imagen", "Texto", "Listado", "Contacto"],  # required
         icons=["house", "caret-right-fill", "caret-right-fill","caret-right-fill",
                         "caret-right-fill", "envelope"],  # optional
         menu_icon="upc-scan",  # optional

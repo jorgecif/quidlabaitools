@@ -6,6 +6,9 @@ from streamlit_option_menu import option_menu
 from numerize.numerize import numerize
 from streamlit_extras.let_it_rain import rain
 import prompts
+import whisper
+from tempfile import NamedTemporaryFile
+
 
 
 
@@ -76,7 +79,7 @@ st.sidebar.image(image, width=None, use_column_width=None)
 with st.sidebar:
     selected = option_menu(
         menu_title="Selecciona",  # required
-        options=["Home", "Imagen", "Texto", "Listado", "Contacto"],  # required
+        options=["Home", "Imagen", "Texto", "Audio", "Listado", "Contacto"],  # required
         icons=["house", "caret-right-fill", "caret-right-fill","caret-right-fill",
                         "caret-right-fill", "envelope"],  # optional
         menu_icon="upc-scan",  # optional
@@ -311,6 +314,55 @@ if selected == "Listado":
 
 		"""
 
+
+
+if selected == "Audio":
+	actividad_select = st.sidebar.selectbox('Herramienta', ('Selecciona','Audio 1', 'Audio 2'))
+	if actividad_select=="Selecciona":
+		st.title(f"Seleccionaste la opción {selected}")
+		st.write(' ')
+		st.write(' ')
+		st.write("Ahora selecciona una opción dentro de la lista desplegable ubicada en la parte inferior de la barra lateral izquierda (debajo del menú).")
+		
+	
+	if actividad_select=="Audio 1":
+		st.title(f"Herramienta:  {actividad_select}")
+		audio_file = st.file_uploader("Subir audio", type=["wav", "mp3", "m4a"])
+		if st.button("Transcribir audio"):
+			if audio_file is not None:
+				model=whisper.load_model("base")
+				st.success("Modelo cargado")
+
+				with NamedTemporaryFile(suffix="mp3", delete=False) as temp:
+					temp.write(audio_file.getvalue())
+					temp.seek(0)
+					model = whisper.load_model("base")
+					result = model.transcribe(temp.name, fp16=False)
+					st.success("Transcripci[on completada")
+					st.write(result["text"])
+
+
+			else:
+				st.error("Por favor subir el archivo de audio")
+
+		st.audio(audio_file)
+
+	if actividad_select=="Audio 2":
+		st.title(f"Herramienta:  {actividad_select}")
+		audio_file = st.file_uploader("Subir audio", type=["wav", "mp3", "m4a"])
+		if st.button("Transcribir audio"):
+			if audio_file is not None:
+				st.success("Transcribiendo audio")
+				st.write(audio_file.name)
+				transcripcion = openai.Audio.transcribe("whisper-1", audio_file)
+				st.success("Transcripcion completa")
+				st.write(transcripcion)
+
+				#st.markdown(transcripcion["text"])
+			else:
+				st.error("Por favor subir el archivo de audio")
+
+		st.audio(audio_file)
 
 
 
